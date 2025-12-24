@@ -3,11 +3,11 @@ import { Client } from 'pg'
 export default {
     query: async (queryObject) => {
         const client = new Client({
-            host: 'localhost',
-            port: '5432',
-            password: 'local_pass',
-            user: 'postgres',
-            database: 'postgres'
+            host: process.env.POSTGRES_HOST,
+            port: process.env.POSTGRES_PORT,
+            password: process.env.POSTGRES_PASSWORD,
+            user: process.env.POSTGRES_USER,
+            database: process.env.POSTGRES_DB,
         })
 
         await client.connect()
