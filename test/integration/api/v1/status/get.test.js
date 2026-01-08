@@ -7,4 +7,6 @@ test("GET to /api/v1/status should be return status code 200", async () => {
 
     const parsedUpdatedAt = new Date(body.updated_at).toISOString()
     expect(body.updated_at).toEqual(parsedUpdatedAt)
+    expect(body.database.version).toEqual("16.0")
+    expect(body.database.max_connections).toEqual(expect.any(Number))
 })
