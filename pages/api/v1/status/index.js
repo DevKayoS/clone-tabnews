@@ -15,11 +15,13 @@ export default async function status(request, response) {
 
     response.status(200).json({
         updated_at: updatedAt,
-        database: {
-            version: result.rows[0].version,
-            max_connections: result.rows[0].max_connections,
-            used_connections: result.rows[0].used_connections,
-            free_connections: result.rows[0].free_connections
+        dependencies: {
+            database: {
+                version: result.rows[0].version,
+                max_connections: result.rows[0].max_connections,
+                used_connections: result.rows[0].used_connections,
+                free_connections: result.rows[0].free_connections
+            }
         }
     })
 }
