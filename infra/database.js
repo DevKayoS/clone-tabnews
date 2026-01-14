@@ -10,7 +10,7 @@ export default {
             database: process.env.POSTGRES_DB,
         })
 
-        console.log('Credencias do db', {
+        console.log("Credencias db", {
             host: process.env.POSTGRES_HOST,
             port: process.env.POSTGRES_PORT,
             password: process.env.POSTGRES_PASSWORD,
@@ -24,6 +24,7 @@ export default {
             return result
         } catch (error) {
             console.error(error)
+            throw error
         } finally {
             await client.end()
 
