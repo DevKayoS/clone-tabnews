@@ -10,6 +10,14 @@ export default {
             database: process.env.POSTGRES_DB,
         })
 
+        console.log('Credencias do db', {
+            host: process.env.POSTGRES_HOST,
+            port: process.env.POSTGRES_PORT,
+            password: process.env.POSTGRES_PASSWORD,
+            user: process.env.POSTGRES_USER,
+            database: process.env.POSTGRES_DB,
+        })
+
         try {
             await client.connect()
             const result = await client.query(queryObject)
