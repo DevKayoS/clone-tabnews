@@ -8,14 +8,7 @@ export default {
             password: process.env.POSTGRES_PASSWORD,
             user: process.env.POSTGRES_USER,
             database: process.env.POSTGRES_DB,
-        })
-
-        console.log("Credencias db", {
-            host: process.env.POSTGRES_HOST,
-            port: process.env.POSTGRES_PORT,
-            password: process.env.POSTGRES_PASSWORD,
-            user: process.env.POSTGRES_USER,
-            database: process.env.POSTGRES_DB,
+            ssl: process.env.POSTGRES_SSLMODE == 'require' ? true : false
         })
 
         try {
