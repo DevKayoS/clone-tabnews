@@ -8,7 +8,7 @@ export default async function status(request, response) {
     const result = await database.query({
         text: `
             SELECT 
-                current_setting('server_version') as version,
+                split_part(current_setting('server_version'), ' ', 1) as version,
                 current_setting('max_connections')::int as max_connections,
                 count(*)::int as used_connections,
                 current_setting('max_connections')::int - count(*) as free_connections
