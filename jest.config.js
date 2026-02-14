@@ -6,7 +6,7 @@ const createJestConfig = nextJest({
 
 const jestConfig = {
     moduleDirectories: ['node_modules', '<rootDir>/'],
-    setupFilesAfterEnv: ['<rootDir>/jest.confi.js'],
+    setupFilesAfterEnv: ['<rootDir>/jest.config.js'],
 }
 
 module.exports = createJestConfig(jestConfig)

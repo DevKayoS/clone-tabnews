@@ -1,4 +1,4 @@
-import database from "./../../../../../infra/database"
+import database from "infra/database"
 
 test("GET /api/v1/migrations should return 200", async () => {
     console.log(process.env.DATABASE_URL)
