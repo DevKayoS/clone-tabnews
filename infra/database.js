@@ -8,7 +8,7 @@ export default {
             password: process.env.POSTGRES_PASSWORD,
             user: process.env.POSTGRES_USER,
             database: process.env.POSTGRES_DB,
-            ssl: process.env.POSTGRES_SSLMODE == 'require' ? true : false
+            ssl: getSSLvalues(),
         })
 
         try {
@@ -24,3 +24,13 @@ export default {
         }
     }
 };
+
+function getSSLvalues() {
+    if (process.env.POSTGRES_CA) {
+        return {
+            ca: process.env.POSTGRES_CA
+        }
+    }
+
+    return process.env.NODE_ENV === 'production' ? true : false
+}

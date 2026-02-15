@@ -26,6 +26,8 @@ export default async function migrations(request, response) {
             migrationsTable: "pgmigrations"
         })
 
+        console.log("migrations executadas")
+
         return response.status(200).json(migrations)
 
     }
