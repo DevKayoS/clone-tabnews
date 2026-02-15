@@ -3,6 +3,7 @@ import { join } from "node:path"
 import database from 'infra/database'
 
 export default async function migrations(request, response) {
+    console.log("teste testador")
     const dbClient = await database.getNewClient()
     const defaultMigrations = {
         dbClient: dbClient,
