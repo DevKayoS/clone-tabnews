@@ -1,11 +1,14 @@
 import database from "infra/database"
+import orchestrator from "test/orchestrator.js"
+
+beforeAll(async () => {
+    await orchestrator.waitForAllService()
+    await database.query("drop schema public cascade; create schema public;")
+})
+
+
 
 describe("POST to /api/v1/migrations", () => {
-    beforeAll(async () => {
-        await database.query("drop schema public cascade; create schema public;")
-
-    })
-
     it("POST to /api/v1/migrations should be return 200", async () => {
         const response = await fetch("http://localhost:3000/api/v1/migrations", {
             method: "POST"
