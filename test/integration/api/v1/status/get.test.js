@@ -13,7 +13,7 @@ test("GET to /api/v1/status should be return status code 200", async () => {
     expect(body.updated_at).toEqual(parsedUpdatedAt)
 
     const majorVersion = body.dependencies.database.version.split('.')[0]
-    expect(majorVersion).toEqual("20")
+    expect(majorVersion).toEqual("16")
 
     expect(body.dependencies.database.max_connections).toEqual(expect.any(Number))
     expect(body.dependencies.database.opened_connections).toEqual(1)
