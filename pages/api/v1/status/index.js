@@ -1,12 +1,12 @@
-import database from "infra/database.js"
-import { version } from "react"
+import database from "infra/database.js";
+import { version } from "react";
 
 export default async function status(request, response) {
-    const updatedAt = new Date().toISOString()
+  const updatedAt = new Date().toISOString();
 
-    const databaseName = process.env.POSTGRES_DB
-    const result = await database.query({
-        text: `
+  const databaseName = process.env.POSTGRES_DB;
+  const result = await database.query({
+    text: `
             SELECT 
                 split_part(current_setting('server_version'), ' ', 1) as version,
                 current_setting('max_connections')::int as max_connections,
@@ -15,20 +15,18 @@ export default async function status(request, response) {
             FROM pg_stat_activity
             WHERE datname = $1
         `,
-        values: [databaseName]
-    });
+    values: [databaseName],
+  });
 
-    response.status(200).json({
-        updated_at: updatedAt,
-        dependencies: {
-            database: {
-                version: result.rows[0].version,
-                max_connections: result.rows[0].max_connections,
-                opened_connections: result.rows[0].used_connections,
-                free_connections: result.rows[0].free_connections,
-            }
-        }
-    })
+  response.status(200).json({
+    updated_at: updatedAt,
+    dependencies: {
+      database: {
+        version: result.rows[0].version,
+        max_connections: result.rows[0].max_connections,
+        opened_connections: result.rows[0].used_connections,
+        free_connections: result.rows[0].free_connections,
+      },
+    },
+  });
 }
-
-
