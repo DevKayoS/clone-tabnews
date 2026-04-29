@@ -22,6 +22,6 @@ async function waitWebServer() {
 
 const orchestrator = {
   waitForAllService,
-}
+};
 
-export default orchestrator 
+export default orchestrator;
