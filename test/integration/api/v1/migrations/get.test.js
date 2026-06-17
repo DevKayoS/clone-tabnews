@@ -2,7 +2,7 @@ import orchestrator from "test/orchestrator.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllService();
-  await orchestrator.clearDatabase()
+  await orchestrator.clearDatabase();
 });
 
 test("GET /api/v1/migrations should return 200", async () => {

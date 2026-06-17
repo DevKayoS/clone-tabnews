@@ -22,5 +22,5 @@ describe("GET /api/v1/status", () => {
       );
       expect(body.dependencies.database.opened_connections).toEqual(1);
     });
-  })
-})
+  });
+});
