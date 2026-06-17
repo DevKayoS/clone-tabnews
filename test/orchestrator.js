@@ -22,12 +22,12 @@ async function waitWebServer() {
 }
 
 async function clearDatabase() {
-  await database.query("drop schema public cascade; create schema public")
+  await database.query("drop schema public cascade; create schema public");
 }
 
 const orchestrator = {
   waitForAllService,
-  clearDatabase
+  clearDatabase,
 };
 
 export default orchestrator;
