@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 
 dotenv.config({
   path: ".env.development",
+  quiet: true
 });
 
 const nextJest = require("next/jest");
