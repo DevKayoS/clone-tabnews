@@ -14,9 +14,11 @@ export default function StatusPage() {
 function UpdatedAt() {
   const { isLoading, data } = useSWR("/api/v1/status", fetchAPI, {
     refreshInterval: 2000,
-  })
+  });
 
-  let updatedAtText = isLoading ? "Carregando..." : new Date(data.updated_at).toLocaleString("pt-br");
+  let updatedAtText = isLoading
+    ? "Carregando..."
+    : new Date(data.updated_at).toLocaleString("pt-br");
 
   return (
     <>
@@ -25,24 +27,23 @@ function UpdatedAt() {
   );
 }
 
-
 function Database() {
   const { isLoading, data } = useSWR("/api/v1/status", fetchAPI, {
     refreshInterval: 2000,
-  })
+  });
 
-  console.log(data)
-  let databaseStatusInfo = "Carregando..."
+  console.log(data);
+  let databaseStatusInfo = "Carregando...";
 
   if (!isLoading && data) {
-    const databaseInfo = data.dependencies.database
+    const databaseInfo = data.dependencies.database;
     databaseStatusInfo = (
       <>
         <div>Versão: {databaseInfo.version}</div>
         <div>Conexões abertas: {databaseInfo.opened_connections}</div>
         <div>Conexões máximas: {databaseInfo.max_connections}</div>
       </>
-    )
+    );
   }
 
   return (
@@ -50,6 +51,5 @@ function Database() {
       <h1>Database</h1>
       {databaseStatusInfo}
     </>
-  )
-
+  );
 }
