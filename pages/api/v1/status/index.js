@@ -29,13 +29,12 @@ export default async function status(request, response) {
         },
       },
     });
-
   } catch (error) {
     const publicObjectError = new InternalServerError({
-      cause: error
+      cause: error,
     });
 
-    console.error("[Status]: ", publicObjectError)
-    return response.status(500).json(publicObjectError)
+    console.error("[Status]: ", publicObjectError);
+    return response.status(500).json(publicObjectError);
   }
 }
