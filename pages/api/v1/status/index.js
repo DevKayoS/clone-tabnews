@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import database from "infra/database.js";
 import { InternalServerError } from "infra/errors";
 
@@ -18,7 +19,7 @@ export default async function status(request, response) {
       values: [databaseName],
     });
 
-    response.status(200).json({
+    response.status(StatusCodes.OK).json({
       updated_at: updatedAt,
       dependencies: {
         database: {
