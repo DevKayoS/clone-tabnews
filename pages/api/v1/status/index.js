@@ -1,8 +1,23 @@
+import { createRouter } from "next-connect"
 import { StatusCodes } from "http-status-codes";
 import database from "infra/database.js";
-import { InternalServerError } from "infra/errors";
+import { InternalServerError, MethodNotAllowedError } from "infra/errors";
 
-export default async function status(request, response) {
+const router = createRouter()
+
+router.get(getHandler)
+
+export default router.handler({
+  onNoMatch: onNoMatchHandler
+})
+
+function onNoMatchHandler(request, response) {
+  const onNoMatchError = new MethodNotAllowedError()
+
+  return response.status(StatusCodes.METHOD_NOT_ALLOWED).json(onNoMatchError)
+}
+
+async function getHandler(request, response) {
   try {
     const updatedAt = new Date().toISOString();
     const databaseName = process.env.POSTGRES_DB;
@@ -39,3 +54,5 @@ export default async function status(request, response) {
     return response.status(500).json(publicObjectError);
   }
 }
+
+
