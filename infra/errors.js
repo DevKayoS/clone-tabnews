@@ -26,13 +26,11 @@ export class InternalServerError extends BaseError {
 
 
 export class MethodNotAllowedError extends BaseError {
-  constructor({ cause }) {
-    super("Method Not Allowed", {
-      cause
-    })
+  constructor() {
+    super("Metodo nao permitido para esse endpoint.")
 
     this.name = "MethodNotAllowedError"
-    this.action = "Tente um dos metodos liberados"
+    this.action = "Verifique se o metodo HTTP enviado e valido para esse endpoint."
     this.statusCode = StatusCodes.METHOD_NOT_ALLOWED
   }
 }

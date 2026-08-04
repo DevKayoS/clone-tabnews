@@ -12,7 +12,16 @@ describe("POST /api/v1/status", () => {
         method: "POST"
       });
 
+
+      const responseBody = await response.json();
+
       expect(response.status).toBe(StatusCodes.METHOD_NOT_ALLOWED);
+      expect(responseBody).toEqual({
+        name: "MethodNotAllowedError",
+        message: "Metodo nao permitido para esse endpoint.",
+        action: "Verifique se o metodo HTTP enviado e valido para esse endpoint.",
+        status_code: StatusCodes.METHOD_NOT_ALLOWED
+      })
     });
   });
 });
