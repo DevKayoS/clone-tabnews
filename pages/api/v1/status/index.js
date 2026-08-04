@@ -1,7 +1,8 @@
 import { createRouter } from "next-connect"
 import { StatusCodes } from "http-status-codes";
 import database from "infra/database.js";
-import { InternalServerError, MethodNotAllowedError } from "infra/errors";
+import { onErrorHandler } from "utils/onErrorHandler";
+import { onNoMatchHandler } from "utils/onNoMatchHandler";
 
 const router = createRouter()
 
@@ -11,19 +12,6 @@ export default router.handler({
   onNoMatch: onNoMatchHandler,
   onError: onErrorHandler
 })
-
-function onErrorHandler(error, request, response) {
-  const publicObjectError = new InternalServerError({
-    cause: error,
-  });
-
-  return response.status(publicObjectError.statusCode).json(publicObjectError);
-}
-
-function onNoMatchHandler(request, response) {
-  const onNoMatchError = new MethodNotAllowedError()
-  return response.status(onNoMatchError.statusCode).json(onNoMatchError)
-}
 
 async function getHandler(request, response) {
   const updatedAt = new Date().toISOString();
