@@ -7,10 +7,9 @@ class BaseError extends Error {
       message: this.message,
       status_code: this.statusCode,
       action: this.action,
-    }
+    };
   }
 }
-
 
 export class InternalServerError extends BaseError {
   constructor({ cause, statusCode, message, name, action }) {
@@ -27,23 +26,23 @@ export class InternalServerError extends BaseError {
 
 export class MethodNotAllowedError extends BaseError {
   constructor() {
-    super("Metodo nao permitido para esse endpoint.")
+    super("Metodo nao permitido para esse endpoint.");
 
-    this.name = "MethodNotAllowedError"
-    this.action = "Verifique se o metodo HTTP enviado e valido para esse endpoint."
-    this.statusCode = StatusCodes.METHOD_NOT_ALLOWED
+    this.name = "MethodNotAllowedError";
+    this.action =
+      "Verifique se o metodo HTTP enviado e valido para esse endpoint.";
+    this.statusCode = StatusCodes.METHOD_NOT_ALLOWED;
   }
 }
 
 export class ServiceError extends BaseError {
   constructor({ cause, message }) {
     super(message || "Servico indisponivel no momento.", {
-      cause
-    })
+      cause,
+    });
 
-    this.name = "ServiceError"
-    this.action = "Verifique se o servico esta disponivel"
-    this.statusCode = StatusCodes.SERVICE_UNAVAILABLE
+    this.name = "ServiceError";
+    this.action = "Verifique se o servico esta disponivel";
+    this.statusCode = StatusCodes.SERVICE_UNAVAILABLE;
   }
 }
-

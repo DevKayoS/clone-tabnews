@@ -9,9 +9,8 @@ describe("POST /api/v1/status", () => {
   describe("Anonymous user", () => {
     test("Retrieving current system status", async () => {
       const response = await fetch("http://localhost:3000/api/v1/status", {
-        method: "POST"
+        method: "POST",
       });
-
 
       const responseBody = await response.json();
 
@@ -19,9 +18,10 @@ describe("POST /api/v1/status", () => {
       expect(responseBody).toEqual({
         name: "MethodNotAllowedError",
         message: "Metodo nao permitido para esse endpoint.",
-        action: "Verifique se o metodo HTTP enviado e valido para esse endpoint.",
-        status_code: StatusCodes.METHOD_NOT_ALLOWED
-      })
+        action:
+          "Verifique se o metodo HTTP enviado e valido para esse endpoint.",
+        status_code: StatusCodes.METHOD_NOT_ALLOWED,
+      });
     });
   });
 });

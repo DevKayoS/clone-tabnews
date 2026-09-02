@@ -10,4 +10,3 @@ export function onErrorHandler(error, request, response) {
 
   return response.status(publicObjectError.statusCode).json(publicObjectError);
 }
-
