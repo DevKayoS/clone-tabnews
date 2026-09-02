@@ -13,17 +13,17 @@ class BaseError extends Error {
 
 
 export class InternalServerError extends BaseError {
-  constructor({ cause }) {
-    super("Um erro interno nao esperado aconteceu", {
+  constructor({ cause, statusCode, message, name, action }) {
+    super(message || "Um erro interno nao esperado aconteceu", {
       cause,
     });
 
-    this.name = "InternalServerError";
-    this.action = "Entre em contato com o suporte!";
-    this.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+    this.name = name || "InternalServerError";
+    this.action = action || "Entre em contato com o suporte!";
+
+    this.statusCode = statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
   }
 }
-
 
 export class MethodNotAllowedError extends BaseError {
   constructor() {
@@ -34,3 +34,16 @@ export class MethodNotAllowedError extends BaseError {
     this.statusCode = StatusCodes.METHOD_NOT_ALLOWED
   }
 }
+
+export class ServiceError extends BaseError {
+  constructor({ cause, message }) {
+    super(message || "Servico indisponivel no momento.", {
+      cause
+    })
+
+    this.name = "ServiceError"
+    this.action = "Verifique se o servico esta disponivel"
+    this.statusCode = StatusCodes.SERVICE_UNAVAILABLE
+  }
+}
+
