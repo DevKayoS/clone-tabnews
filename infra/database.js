@@ -1,4 +1,5 @@
 import { Client } from "pg";
+import { ServiceError } from "./errors";
 
 function getSSLvalues() {
   if (process.env.POSTGRES_CA) {
@@ -33,8 +34,11 @@ async function query(queryObject) {
     const result = await client.query(queryObject);
     return result;
   } catch (error) {
-    console.error("Erro dentro do database.js", error);
-    throw error;
+    const serviceErrorObject = new ServiceError({
+      message: "Erro na conexao com Banco de dados ou na Query",
+      cause: error,
+    });
+    throw serviceErrorObject;
   } finally {
     await client?.end();
   }

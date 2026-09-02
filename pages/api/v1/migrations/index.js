@@ -1,46 +1,54 @@
 import { runner as migrationRunner } from "node-pg-migrate";
 import { join } from "node:path";
 import database from "infra/database";
+import { StatusCodes } from "http-status-codes";
+import { createRouter } from "next-connect";
+import { controllerHandler } from "utils/controllerHandler";
 
-export default async function migrations(request, response) {
-  const allowedMethods = ["GET", "POST"];
-  if (!allowedMethods.includes(request.method)) {
-    return response.status(405).json({
-      error: `Method "${request.method}" not Allowed`,
-    });
-  }
+const router = createRouter();
+router.get(getHandler);
+router.post(postHandler);
 
+export default router.handler(controllerHandler.errorHandler);
+
+function defaultMigrationsBody(dbClient) {
+  return {
+    dbClient: dbClient,
+    dir: join("infra", "migrations"),
+    direction: "up",
+    verbose: true,
+    migrationsTable: "pgmigrations",
+    dryRun: true,
+  };
+}
+
+async function getHandler(request, response) {
   let dbClient;
   try {
     dbClient = await database.getNewClient();
-    const defaultMigrations = {
-      dbClient: dbClient,
-      dir: join("infra", "migrations"),
-      direction: "up",
-      verbose: true,
-      migrationsTable: "pgmigrations",
-      dryRun: true,
-    };
+    const defaultMigrations = defaultMigrationsBody(dbClient);
+    const pedingMigrations = await migrationRunner(defaultMigrations);
+    return response.status(StatusCodes.OK).json(pedingMigrations);
+  } finally {
+    await dbClient.end();
+  }
+}
 
-    if (request.method === "GET") {
-      const pedingMigrations = await migrationRunner(defaultMigrations);
+async function postHandler(request, response) {
+  let dbClient;
+  try {
+    dbClient = await database.getNewClient();
+    const defaultMigrations = defaultMigrationsBody(dbClient);
+    const migratedMigrations = await migrationRunner({
+      ...defaultMigrations,
+      dryRun: false,
+    });
 
-      return response.status(200).json(pedingMigrations);
-    }
-
-    if (request.method === "POST") {
-      const migratedMigrations = await migrationRunner({
-        ...defaultMigrations,
-        dryRun: false,
-      });
-
-      return response
-        .status(migratedMigrations.length > 0 ? 201 : 200)
-        .json(migratedMigrations);
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
+    return response
+      .status(
+        migratedMigrations.length > 0 ? StatusCodes.CREATED : StatusCodes.OK,
+      )
+      .json(migratedMigrations);
   } finally {
     await dbClient.end();
   }
