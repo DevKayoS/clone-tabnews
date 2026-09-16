@@ -7,7 +7,7 @@ function defaultMigrationsBody(dbClient) {
     dbClient: dbClient,
     dir: join("infra", "migrations"),
     direction: "up",
-    verbose: true,
+    log: () => { },
     migrationsTable: "pgmigrations",
     dryRun: true,
   };
