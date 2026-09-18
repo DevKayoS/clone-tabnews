@@ -4,9 +4,9 @@ export function onErrorHandler(error, request, response) {
   const publicObjectError = new InternalServerError({
     cause: error,
     statusCode: error.statusCode,
+    message: error.message,
+    action: error.action,
+    name: error.name
   });
-
-  console.error(publicObjectError);
-
   return response.status(publicObjectError.statusCode).json(publicObjectError);
 }

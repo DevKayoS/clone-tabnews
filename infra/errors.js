@@ -46,3 +46,15 @@ export class ServiceError extends BaseError {
     this.statusCode = StatusCodes.SERVICE_UNAVAILABLE;
   }
 }
+
+export class ValidationError extends BaseError {
+  constructor({ cause, message, action }) {
+    super(message || "Servico indisponivel no momento.", {
+      cause,
+    });
+
+    this.name = "ValidationError";
+    this.action = action || "Ajuste os dados enviados e tente novamente";
+    this.statusCode = StatusCodes.BAD_REQUEST;
+  }
+}

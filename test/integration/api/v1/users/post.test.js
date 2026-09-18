@@ -1,4 +1,6 @@
 import { StatusCodes } from "http-status-codes";
+import database from "infra/database";
+import user from "models/user";
 import orchestrator from "test/orchestrator.js";
 import { version as uuidVersion } from "uuid"
 
@@ -92,9 +94,15 @@ describe("POST /api/v1/users", () => {
         },
       );
 
-      //const responseBody2 = await response2.json();
+      const responseBody2 = await response2.json();
       expect(response2.status).toBe(StatusCodes.BAD_REQUEST)
 
+      expect(responseBody2).toEqual({
+        name: "ValidationError",
+        message: "O email informado ja esta sendo utilizado",
+        action: "Utilize outro email para realizar o cadastro",
+        status_code: StatusCodes.BAD_REQUEST
+      })
     });
 
   });
