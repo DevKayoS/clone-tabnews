@@ -1,8 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { createRouter } from "next-connect";
 import { controllerHandler } from "utils/controllerHandler";
-import user from "models/user.js"
-
+import user from "models/user.js";
 
 const router = createRouter();
 router.post(postHandler);

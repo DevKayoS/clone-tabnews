@@ -3,7 +3,7 @@ export const up = (pgm) => {
     id: {
       type: "uuid",
       primaryKey: true,
-      default: pgm.func("gen_random_uuid()")
+      default: pgm.func("gen_random_uuid()"),
     },
     username: {
       type: "varchar(30)",
@@ -21,14 +21,13 @@ export const up = (pgm) => {
     },
     created_at: {
       type: "timestamptz",
-      default: pgm.func("now()")
+      default: pgm.func("now()"),
     },
     updated_at: {
       type: "timestamptz",
-      default: pgm.func("now()")
+      default: pgm.func("now()"),
     },
-
-  })
+  });
 };
 
 export const down = false;
