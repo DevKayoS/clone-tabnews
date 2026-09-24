@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 
-class BaseError extends Error {
+export class BaseError extends Error {
   toJSON() {
     return {
       name: this.name,
