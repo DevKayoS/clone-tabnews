@@ -52,8 +52,31 @@ async function validateUniqueUsername(username) {
   }
 }
 
+async function findOneByUsename(username) {
+  const user = runSelectQuey(username);
+
+  return user;
+
+  async function runSelectQuey(username) {
+    const user = await database.query({
+      text: `SELECT * FROM users WHERE LOWER(username) = LOWER($1);`,
+      values: [username],
+    });
+
+    // if (user.rows == 0) {
+    //   throw new NotFoundError({
+    //     message: "Usuario nao encontrado",
+    //     action: "Verifique",
+    //   });
+    // }
+
+    return user.rows[0];
+  }
+}
+
 const user = {
   create,
+  findOneByUsename,
 };
 
 export default user;
