@@ -1,16 +1,17 @@
-import { InternalServerError, ValidationError } from "infra/errors";
+import { InternalServerError } from "infra/errors";
 
 export function onErrorHandler(error, request, response) {
-  if (error instanceof ValidationError) {
-    return response.status(error.statusCode).json(error);
-  }
-
   const publicObjectError = new InternalServerError({
     cause: error,
     statusCode: error.statusCode,
+    message: error.message,
+    action: error.action,
+    name: error.name,
   });
 
-  console.error(publicObjectError);
+  if (publicObjectError.name == "InternalServerError") {
+    console.error(publicObjectError);
+  }
 
   return response.status(publicObjectError.statusCode).json(publicObjectError);
 }
