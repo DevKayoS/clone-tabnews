@@ -15,17 +15,21 @@ export const up = (pgm) => {
       notNull: true,
       unique: true,
     },
+
+    // tamanho que retorna do bcrypt que e de 60 caracteres
     password: {
-      type: "varchar(72)",
+      type: "varchar(60)",
       notNull: true,
     },
     created_at: {
       type: "timestamptz",
-      default: pgm.func("now()"),
+      default: pgm.func("timezone('utc', now())"),
+      notNull: true,
     },
     updated_at: {
       type: "timestamptz",
-      default: pgm.func("now()"),
+      default: pgm.func("timezone('utc', now())"),
+      notNull: true,
     },
   });
 };
