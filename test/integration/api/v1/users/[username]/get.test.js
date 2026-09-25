@@ -89,5 +89,27 @@ describe("GET /api/v1/users/[username]", () => {
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
     });
+
+    test("With nonexists username", async () => {
+      const response = await fetch(
+        "http://localhost:3000/api/v1/users/usuarioinexistente",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      expect(response.status).toBe(StatusCodes.NOT_FOUND);
+
+      const responseBody = await response.json();
+
+      expect(responseBody).toEqual({
+        name: "NotFoundError",
+        message: "O username informado nao foi encontrado no sistema.",
+        action: "Verifique se o username esta digitado corretamente",
+        status_code: StatusCodes.NOT_FOUND,
+      });
+    });
   });
 });

@@ -58,3 +58,15 @@ export class ValidationError extends BaseError {
     this.statusCode = StatusCodes.BAD_REQUEST;
   }
 }
+
+export class NotFoundError extends BaseError {
+  constructor({ cause, message, action }) {
+    super(message || "Servico indisponivel no momento.", {
+      cause,
+    });
+
+    this.name = "NotFoundError";
+    this.action = action || "Dados nao encontrados";
+    this.statusCode = StatusCodes.NOT_FOUND;
+  }
+}
