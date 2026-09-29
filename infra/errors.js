@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 
-class BaseError extends Error {
+export class BaseError extends Error {
   toJSON() {
     return {
       name: this.name,
@@ -44,5 +44,29 @@ export class ServiceError extends BaseError {
     this.name = "ServiceError";
     this.action = "Verifique se o servico esta disponivel";
     this.statusCode = StatusCodes.SERVICE_UNAVAILABLE;
+  }
+}
+
+export class ValidationError extends BaseError {
+  constructor({ cause, message, action }) {
+    super(message || "Servico indisponivel no momento.", {
+      cause,
+    });
+
+    this.name = "ValidationError";
+    this.action = action || "Ajuste os dados enviados e tente novamente";
+    this.statusCode = StatusCodes.BAD_REQUEST;
+  }
+}
+
+export class NotFoundError extends BaseError {
+  constructor({ cause, message, action }) {
+    super(message || "Servico indisponivel no momento.", {
+      cause,
+    });
+
+    this.name = "NotFoundError";
+    this.action = action || "Dados nao encontrados";
+    this.statusCode = StatusCodes.NOT_FOUND;
   }
 }

@@ -17,4 +17,17 @@ const jestConfig = {
   testTimeout: 60000,
 };
 
-module.exports = createJestConfig(jestConfig);
+const asyncJestConfig = createJestConfig(jestConfig);
+
+module.exports = async () => {
+  const config = await asyncJestConfig();
+
+  config.transformIgnorePatterns = config.transformIgnorePatterns.map(
+    (pattern) =>
+      pattern.includes("/node_modules/(?!.pnpm)")
+        ? pattern.replace("(?!.pnpm)", "(?!.pnpm)(?!node-pg-migrate/)")
+        : pattern,
+  );
+
+  return config;
+};

@@ -1,9 +1,12 @@
-import { InternalServerError } from "infra/errors";
+import { BaseError, InternalServerError } from "infra/errors";
 
 export function onErrorHandler(error, request, response) {
+  if (error instanceof BaseError && !(error instanceof InternalServerError)) {
+    return response.status(error.statusCode).json(error);
+  }
+
   const publicObjectError = new InternalServerError({
     cause: error,
-    statusCode: error.statusCode,
   });
 
   console.error(publicObjectError);
