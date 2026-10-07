@@ -104,7 +104,7 @@ describe("POST /api/v1/users", () => {
       expect(responseBody2).toEqual({
         name: "ValidationError",
         message: "O email informado ja esta sendo utilizado",
-        action: "Utilize outro email para realizar o cadastro",
+        action: "Utilize outro email para realizar esta operacao",
         status_code: StatusCodes.BAD_REQUEST,
       });
     });
@@ -156,7 +156,7 @@ describe("POST /api/v1/users", () => {
       expect(responseBody2).toEqual({
         name: "ValidationError",
         message: "O username informado ja esta sendo utilizado",
-        action: "Utilize outro username para realizar o cadastro",
+        action: "Utilize outro username para realizar esta operacao",
         status_code: StatusCodes.BAD_REQUEST,
       });
     });

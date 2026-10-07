@@ -24,33 +24,33 @@ async function create({ username, email, password }) {
 
     return newUser.rows[0];
   }
+}
 
-  async function validateUniqueEmail(email) {
-    const validateUniqueEmail = await database.query({
-      text: `SELECT email FROM users WHERE LOWER(email) = LOWER($1);`,
-      values: [email],
+async function validateUniqueEmail(email) {
+  const validateUniqueEmail = await database.query({
+    text: `SELECT email FROM users WHERE LOWER(email) = LOWER($1);`,
+    values: [email],
+  });
+
+  if (validateUniqueEmail.rows.length > 0) {
+    throw new ValidationError({
+      message: "O email informado ja esta sendo utilizado",
+      action: "Utilize outro email para realizar esta operacao",
     });
-
-    if (validateUniqueEmail.rows.length > 0) {
-      throw new ValidationError({
-        message: "O email informado ja esta sendo utilizado",
-        action: "Utilize outro email para realizar o cadastro",
-      });
-    }
   }
+}
 
-  async function validateUniqueUsername(username) {
-    const validateUniqueUsername = await database.query({
-      text: `SELECT username FROM users WHERE LOWER(username) = LOWER($1);`,
-      values: [username],
+async function validateUniqueUsername(username) {
+  const validateUniqueUsername = await database.query({
+    text: `SELECT username FROM users WHERE LOWER(username) = LOWER($1);`,
+    values: [username],
+  });
+
+  if (validateUniqueUsername.rows.length > 0) {
+    throw new ValidationError({
+      message: "O username informado ja esta sendo utilizado",
+      action: "Utilize outro username para realizar esta operacao",
     });
-
-    if (validateUniqueUsername.rows.length > 0) {
-      throw new ValidationError({
-        message: "O username informado ja esta sendo utilizado",
-        action: "Utilize outro username para realizar o cadastro",
-      });
-    }
   }
 }
 
@@ -80,9 +80,22 @@ async function findOneByUsename(username) {
   }
 }
 
+async function update(username, userInputValues) {
+  const user = await findOneByUsename(username);
+
+  if ("username" in userInputValues) {
+    await validateUniqueUsername(userInputValues.username);
+  }
+
+  if ("email" in userInputValues) {
+    await validateUniqueEmail(userInputValues.email);
+  }
+}
+
 const user = {
   create,
   findOneByUsename,
+  update,
 };
 
 export default user;
