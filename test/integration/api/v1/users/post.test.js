@@ -1,4 +1,6 @@
 import { StatusCodes } from "http-status-codes";
+import password from "models/password";
+import user from "models/user";
 import orchestrator from "test/orchestrator.js";
 import { version as uuidVersion } from "uuid";
 
@@ -30,7 +32,7 @@ describe("POST /api/v1/users", () => {
         id: responseBody.id,
         username: "johndoe",
         email: "johndoe@gmail.com",
-        password: "senha123",
+        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -38,6 +40,21 @@ describe("POST /api/v1/users", () => {
       expect(uuidVersion(responseBody.id)).toEqual(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+
+      const userInDatabase = await user.findOneByUsename(responseBody.username);
+      const correctPasswordMatch = await password.compare(
+        "senha123",
+        userInDatabase.password,
+      );
+
+      expect(correctPasswordMatch).toBe(true);
+
+      const incorrectPasswordMatch = await password.compare(
+        "senha122",
+        userInDatabase.password,
+      );
+
+      expect(incorrectPasswordMatch).toBe(false);
     });
 
     test("With duplicated `email`", async () => {
@@ -60,7 +77,7 @@ describe("POST /api/v1/users", () => {
         id: responseBody.id,
         username: "johndoeduplicado",
         email: "johndoeduplicado@gmail.com",
-        password: "senha123",
+        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -87,7 +104,7 @@ describe("POST /api/v1/users", () => {
       expect(responseBody2).toEqual({
         name: "ValidationError",
         message: "O email informado ja esta sendo utilizado",
-        action: "Utilize outro email para realizar o cadastro",
+        action: "Utilize outro email para realizar esta operacao",
         status_code: StatusCodes.BAD_REQUEST,
       });
     });
@@ -112,7 +129,7 @@ describe("POST /api/v1/users", () => {
         id: responseBody.id,
         username: "johndoeduplicadoUsername",
         email: "johndoeduplicadoUsername@gmail.com",
-        password: "senha123",
+        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -139,7 +156,7 @@ describe("POST /api/v1/users", () => {
       expect(responseBody2).toEqual({
         name: "ValidationError",
         message: "O username informado ja esta sendo utilizado",
-        action: "Utilize outro username para realizar o cadastro",
+        action: "Utilize outro username para realizar esta operacao",
         status_code: StatusCodes.BAD_REQUEST,
       });
     });
