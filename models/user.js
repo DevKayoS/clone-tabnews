@@ -81,7 +81,11 @@ async function findOneByUsename(username) {
 }
 
 async function update(username, userInputValues) {
-  const user = await findOneByUsename(username);
+  console.log({
+    username,
+    userInputValues,
+  });
+  const currentUser = await findOneByUsename(username);
 
   if ("username" in userInputValues) {
     await validateUniqueUsername(userInputValues.username);
@@ -89,6 +93,35 @@ async function update(username, userInputValues) {
 
   if ("email" in userInputValues) {
     await validateUniqueEmail(userInputValues.email);
+  }
+
+  if ("password" in userInputValues) {
+    const password = await hashPasswordInObject(userInputValues.password);
+    userInputValues.password = password;
+  }
+
+  const userWithNewValues = { ...currentUser, ...userInputValues };
+  const userUpdated = await runUpdateQuery(userWithNewValues);
+
+  return userUpdated;
+
+  async function runUpdateQuery(user) {
+    const results = await database.query({
+      text: `
+        UPDATE 
+          users 
+        SET 
+          username = LOWER($2),
+          email = LOWER($3),
+          password = $4,
+          updated_at = timezone('utc', now())
+        WHERE id = $1
+        RETURNING *
+      `,
+      values: [user.id, user.username, user.email, user.password],
+    });
+
+    return results.rows[0];
   }
 }
 

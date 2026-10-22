@@ -1,5 +1,7 @@
 import { StatusCodes } from "http-status-codes";
+import password from "models/password";
 import orchestrator from "test/orchestrator.js";
+import { version as uuidVersion } from "uuid";
 
 beforeAll(async () => {
   await orchestrator.waitForAllService();
@@ -132,6 +134,173 @@ describe("PATCH /api/v1/users/[username]", () => {
         action: "Utilize outro email para realizar esta operacao",
         status_code: StatusCodes.BAD_REQUEST,
       });
+    });
+
+    test("With unique `username`", async () => {
+      const unique1Response = await fetch(
+        "http://localhost:3000/api/v1/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: "unique1",
+            email: "unique1@gmail.com",
+            password: "senha123",
+          }),
+        },
+      );
+
+      expect(unique1Response.status).toBe(StatusCodes.CREATED);
+
+      const unique2Response = await fetch(
+        "http://localhost:3000/api/v1/users/unique1",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: "unique2",
+          }),
+        },
+      );
+
+      expect(unique2Response.status).toBe(StatusCodes.OK);
+
+      const responseBody = await unique2Response.json();
+
+      expect(responseBody).toEqual({
+        id: responseBody.id,
+        username: "unique2",
+        email: "unique1@gmail.com",
+        password: responseBody.password,
+        created_at: responseBody.created_at,
+        updated_at: responseBody.updated_at,
+      });
+
+      expect(uuidVersion(responseBody.id)).toEqual(4);
+      expect(Date.parse(responseBody.created_at)).not.toBeNaN();
+      expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+
+      expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+    });
+
+    test("With unique `email`", async () => {
+      const unique1Response = await fetch(
+        "http://localhost:3000/api/v1/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: "uniqueemail",
+            email: "uniqueemail1@gmail.com",
+            password: "senha123",
+          }),
+        },
+      );
+
+      expect(unique1Response.status).toBe(StatusCodes.CREATED);
+
+      const unique2Response = await fetch(
+        "http://localhost:3000/api/v1/users/uniqueemail",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: "uniqueemail2@gmail.com",
+          }),
+        },
+      );
+
+      expect(unique2Response.status).toBe(StatusCodes.OK);
+
+      const responseBody = await unique2Response.json();
+
+      expect(responseBody).toEqual({
+        id: responseBody.id,
+        username: "uniqueemail",
+        email: "uniqueemail2@gmail.com",
+        password: responseBody.password,
+        created_at: responseBody.created_at,
+        updated_at: responseBody.updated_at,
+      });
+
+      expect(uuidVersion(responseBody.id)).toEqual(4);
+      expect(Date.parse(responseBody.created_at)).not.toBeNaN();
+      expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+
+      expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+    });
+
+    test("With new `password`", async () => {
+      const unique1Response = await fetch(
+        "http://localhost:3000/api/v1/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: "uniquepassword",
+            email: "uniquepassword@gmail.com",
+            password: "senha123",
+          }),
+        },
+      );
+
+      expect(unique1Response.status).toBe(StatusCodes.CREATED);
+
+      const unique2Response = await fetch(
+        "http://localhost:3000/api/v1/users/uniquepassword",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            password: "teste123",
+          }),
+        },
+      );
+
+      expect(unique2Response.status).toBe(StatusCodes.OK);
+
+      const responseBody = await unique2Response.json();
+
+      expect(responseBody).toEqual({
+        id: responseBody.id,
+        username: "uniquepassword",
+        email: "uniquepassword@gmail.com",
+        password: responseBody.password,
+        created_at: responseBody.created_at,
+        updated_at: responseBody.updated_at,
+      });
+
+      expect(uuidVersion(responseBody.id)).toEqual(4);
+      expect(Date.parse(responseBody.created_at)).not.toBeNaN();
+      expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+
+      expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+
+      const correctPasswordMatch = await password.compare(
+        "teste123",
+        responseBody.password,
+      );
+
+      expect(correctPasswordMatch).toBe(true);
+
+      const incorrectPasswordMatch = await password.compare(
+        "senha123",
+        responseBody.password,
+      );
+
+      expect(incorrectPasswordMatch).toBe(false);
     });
   });
 });
